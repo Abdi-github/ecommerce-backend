@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Backend for ecommerce project",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "keywords": [
+    "backend",
+    "ecommerce",
+    "api"
+  ],
+  "author": "Abdulkadir Ahmed Hussien",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.1",
+    "mongoose": "^5.10.15",
+    "nodemon": "^2.0.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-plugin-react": "^7.21.5"
+  }
+}
