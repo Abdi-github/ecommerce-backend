@@ -42,3 +42,12 @@ export const signin = expressAsyncHandler(async (req, res) => {
     return res.status(401).send({ message: "Something went wrong" });
   }
 });
+
+// ADD MIDDLEWARE FOR AUTHENTICATED USERS
+
+export const authSignin = expressAsyncHandler(async (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  req.user = user;
+  next();
+});
