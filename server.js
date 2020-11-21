@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import nodemon from "nodemon";
 import mongoose from "mongoose";
+import userRouter from "./routers/auth.js";
+import authRouter from "./routers/auth.js";
 
 dotenv.config();
 
@@ -21,10 +23,11 @@ mongoose
 const app = express();
 
 app.use(express.json());
-
+app.use("/api", authRouter);
+/*
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "Server is running.",
+    message: "Server is running",
   });
 });
 app.post("/data", (req, res) => {
@@ -32,6 +35,8 @@ app.post("/data", (req, res) => {
     message: req.body,
   });
 });
+*/
+
 app.listen(process.env.PORT, () => {
   console.log(`Serve at http://localhost:${process.env.PORT}`);
 });
