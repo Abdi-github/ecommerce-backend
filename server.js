@@ -1,9 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
-import nodemon from "nodemon";
+// import nodemon from "nodemon";
 import mongoose from "mongoose";
-import userRouter from "./routers/auth.js";
+// import userRouter from "./routers/auth.js";
 import authRouter from "./routers/auth.js";
+import adminRouter from "./routers/admin/auth.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api", authRouter);
+app.use("/api", adminRouter);
 /*
 app.get("/", (req, res) => {
   res.status(200).json({
