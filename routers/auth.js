@@ -1,5 +1,5 @@
 import express from "express";
-import { authSignin, signin, signup } from "../controller/auth.js";
+import { signin, signup } from "../controller/auth.js";
 import {
   isValidated,
   signinValidator,

@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 // import userRouter from "./routers/auth.js";
 import authRouter from "./routers/auth.js";
 import adminRouter from "./routers/admin/auth.js";
+import categoryRouter from "./routers/category.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ const app = express();
 app.use(express.json());
 app.use("/api", authRouter);
 app.use("/api", adminRouter);
+app.use("/api", categoryRouter);
 /*
 app.get("/", (req, res) => {
   res.status(200).json({
