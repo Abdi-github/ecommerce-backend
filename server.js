@@ -7,6 +7,7 @@ import authRouter from "./routers/auth.js";
 import adminRouter from "./routers/admin/auth.js";
 import categoryRouter from "./routers/category.js";
 import productRouter from "./routers/product.js";
+import cartRouter from "./routers/cart.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use("/api", authRouter);
 app.use("/api", adminRouter);
 app.use("/api", categoryRouter);
 app.use("/api", productRouter);
+app.use("/api", cartRouter);
 /*
 app.get("/", (req, res) => {
   res.status(200).json({
