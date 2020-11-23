@@ -4,7 +4,6 @@ import shortid from "shortid";
 import { adminMiddleware, authSignin } from "../common-middleware.js";
 import { createProduct } from "../controller/product.js";
 // import { createproduct, getCategories } from "../controller/product.js";
-import path from "path";
 
 const productRouter = express.Router();
 

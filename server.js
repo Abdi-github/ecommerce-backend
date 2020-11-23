@@ -9,6 +9,13 @@ import categoryRouter from "./routers/category.js";
 import productRouter from "./routers/product.js";
 import cartRouter from "./routers/cart.js";
 
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 dotenv.config();
 
 // mongoDB connection
@@ -25,6 +32,8 @@ mongoose
   });
 
 const app = express();
+
+app.use("/public", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.json());
 app.use("/api", authRouter);
