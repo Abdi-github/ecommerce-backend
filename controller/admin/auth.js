@@ -1,6 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import User from "../../models/userModel.js";
+import bcrypt, { hash } from "bcrypt";
 
 export const signup = expressAsyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -21,37 +22,29 @@ export const signup = expressAsyncHandler(async (req, res) => {
 });
 
 export const signin = expressAsyncHandler(async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (user) {
-    if (user.authenticate(req.body.password) && user.role === "admin") {
-      const token = jwt.sign(
-        { _id: user._id, role: user.role },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" }
-      );
-      const { _id, firstName, lastName, email, role, fullName } = user;
-      res.status(200).send({
-        token,
-        user: { _id, firstName, lastName, email, role, fullName },
-      });
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const cmp = await bcrypt.compare(req.body.password, user.hash_password);
+      if (cmp) {
+        const token = jwt.sign(
+          { _id: user._id, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: "1d" }
+        );
+        const { _id, firstName, lastName, email, role, fullName } = user;
+        res.cookie("token", token, { expiresIn: "1d" });
+        res.status(200).send({
+          token,
+          user: { _id, firstName, lastName, email, role, fullName },
+        });
+      } else {
+        res.status(400).send("Wrong password.");
+      }
     } else {
-      return res.status(400).send({
-        message: "Something went wrong",
-      });
+      res.status(400).send("Wrong username or password.");
     }
-  } else {
-    return res.status(401).send({ message: "Something went wrong" });
+  } catch (error) {
+    res.status(500).send("Internal Server error Occured");
   }
 });
-
-// ADD MIDDLEWARE FOR AUTHENTICATED USERS
-
-// export const authSignin = expressAsyncHandler(async (req, res, next) => {
-//   if (req.headers.authorization) {
-//     const token = req.headers.authorization.split(" ")[1];
-//     const user = jwt.verify(token, process.env.JWT_SECRET);
-//     req.user = user;
-//     next();
-//   }
-//   return res.status(400).send("Authorization required!");
-// });
