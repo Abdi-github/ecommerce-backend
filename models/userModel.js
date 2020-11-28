@@ -57,5 +57,9 @@ userSchema.methods = {
   },
 };
 
+userSchema.path("email").validate(() => {
+  return false;
+}, "Email already exist");
+
 const User = mongoose.model("User", userSchema);
 export default User;

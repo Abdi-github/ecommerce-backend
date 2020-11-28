@@ -5,6 +5,7 @@ import bcrypt, { hash } from "bcrypt";
 
 export const signup = expressAsyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
+
   const user = new User({
     firstName,
     lastName,
@@ -13,11 +14,24 @@ export const signup = expressAsyncHandler(async (req, res) => {
     username: Math.random().toString(),
     role: "admin",
   });
-  const createdUser = await user.save();
-  if (createdUser) {
-    res.send({
-      message: "Admin created successfully!",
-    });
+  const result = await User.findOne({ email: req.body.email })
+    .select("email")
+    .lean();
+
+  if (result) {
+    res.status(401).send({ message: "Email already exists" });
+  } else {
+    const createdUser = await user.save();
+    if (createdUser) {
+      res.send({
+        firstName: createdUser.firstName,
+        lastName: createdUser.lastName,
+        fullName: `${firstName} ${lastName}`,
+        email: createdUser.email,
+        username: createdUser.username,
+        role: createdUser.role,
+      });
+    }
   }
 });
 
@@ -36,15 +50,20 @@ export const signin = expressAsyncHandler(async (req, res) => {
         res.cookie("token", token, { expiresIn: "1d" });
         res.status(200).send({
           token,
-          user: { _id, firstName, lastName, email, role, fullName },
+          _id,
+          firstName,
+          lastName,
+          email,
+          role,
+          fullName: `${firstName} ${lastName}`,
         });
       } else {
-        res.status(400).send("Wrong password.");
+        return res.status(400).send({ message: "Wrong password." });
       }
     } else {
-      res.status(400).send("Wrong username or password.");
+      return res.status(401).send({ message: "Invalid email or password" });
     }
   } catch (error) {
-    res.status(500).send("Internal Server error Occured");
+    return res.status(500).send("Internal Server error Occured");
   }
 });
